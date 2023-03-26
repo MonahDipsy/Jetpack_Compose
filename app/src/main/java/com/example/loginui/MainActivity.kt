@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -93,7 +94,8 @@ fun Login() {
         Column((Modifier
             .fillMaxSize()
             .padding(48.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
 
         ) {
             LoginHeader()
@@ -102,8 +104,14 @@ fun Login() {
             username = it
             }, onPasswordChange = {
             password = it
-                })
-            LoginFooter()
+                },
+            onForgotPasswordClick = {
+
+            })
+            LoginFooter(
+                onSignInClick = {},
+                onSignUpClick = {}
+            )
 
             
         }
@@ -113,7 +121,10 @@ fun Login() {
 }
 
 @Composable
-fun LoginHeader(){
+fun LoginHeader() {
+    Column (horizontalAlignment = Alignment.CenterHorizontally){
+        
+    }
     Text(text = "Welcome Back!", fontSize = 36.sp, fontWeight = FontWeight.ExtraBold)
     Text(text = "Sign in to continue", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
 
@@ -122,35 +133,63 @@ fun LoginHeader(){
 
 
 @Composable
-fun LoginFields(username: String, Password: String,
-                onUsernameChange: (String) -> Unit, onPasswordChange: (String) -> Unit){
-    LoginField(value = username,
-        label = "Username" ,
-        placeholder = "Enter your Email",
-        onValueChange = onUsernameChange,
-        leadingIcon = {
-            Icon(Icons.Default.Email, contentDescription = "Email")
-        }
-    )
+fun ColumnScope.LoginFields(username: String, Password: String,
+                onUsernameChange: (String) -> Unit,
+                onPasswordChange: (String) -> Unit,
+                onForgotPasswordClick: () -> Unit,
+){
+    Column() {
+        LoginField(value = username,
+            label = "Username" ,
+            placeholder = "Enter your Email",
+            onValueChange = onUsernameChange,
+            leadingIcon = {
+                Icon(Icons.Default.Email, contentDescription = "Email")
+            }
+        )
 
 
-    Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
 
-    LoginField(value = Password,
-        label = "Password",
-        placeholder = "Enter your Password",
-        onValueChange = onPasswordChange,
-        visualTransformation = PasswordVisualTransformation(),
-        leadingIcon = {
-            Icon(Icons.Default.Lock, contentDescription = "Password")
-        }
-    )
+        LoginField(value = Password,
+            label = "Password",
+            placeholder = "Enter your Password",
+            onValueChange = onPasswordChange,
+            visualTransformation = PasswordVisualTransformation(),
+            leadingIcon = {
+                Icon(Icons.Default.Lock, contentDescription = "Password")
+            }
+        )
+        TextButton(onClick = onForgotPasswordClick, modifier = Modifier.align(Alignment.End)) {
+            Text(text = "Forgot Password?")
+        
+    }
+
+
+
+    }
 
 }
 
+
 @Composable
-fun LoginFooter(){
+fun LoginFooter(
+    onSignInClick: () ->Unit,
+    onSignUpClick: () ->Unit
+
+){
+    Column() {
+        TextButton(onClick = onSignUpClick) {
+            Text(text = "Don't have an account?, Click here")
+        }
+        
+    }
+    Button(onClick = onSignInClick, modifier = Modifier.fillMaxWidth()) {
+        Text(text = "Sign In")
+    }
+
+
 
 }
 @OptIn(ExperimentalMaterialApi::class)
